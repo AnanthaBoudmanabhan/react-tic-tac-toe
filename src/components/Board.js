@@ -5,8 +5,12 @@ const Board = () => {
     const [xIsNext, setXIsNext] = useState(true);
 
     const handleClick = (i) => {
+        console.log("index", i);
         const temp = squares.slice();
         if (calculateWinner(temp) || temp[i]) {
+            return;
+        }
+        else if (!calculateWinner(temp) && !temp.includes(null)) {
             return;
         }
         temp[i] = xIsNext ? 'X' : 'O';
@@ -18,8 +22,8 @@ const Board = () => {
         setSquares(Array(9).fill(null));
     }
 
-
     const calculateWinner = (squares) => {
+        console.log("squares", squares);
         const lines = [
             [0, 1, 2],
             [3, 4, 5],
@@ -40,14 +44,15 @@ const Board = () => {
     }
 
     const winner = calculateWinner(squares);
+    const isGameOver = !squares.includes(null);
     const status = `Next player : ${xIsNext ? 'X' : 'O'}`;
 
 
     return (
         <div>
             <div className="status">
-                {winner ? `Winner : ${winner}` : status}
-                {winner && (<button style={{ marginLeft: "10px" }} onClick={() => handleRestart()} >Restart Game</button>)}
+                {winner ? `Winner : ${winner}` : (isGameOver ? 'Game Over' : status)}
+                {(winner || isGameOver) && (<button style={{ marginLeft: "10px" }} onClick={() => handleRestart()} >Restart Game</button>)}
             </div>
             <div className="board-row">
                 <Square value={squares[0]} onClick={() => handleClick(0)} />
